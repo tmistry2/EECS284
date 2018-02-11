@@ -9,7 +9,7 @@ import numpy as np
 import time
 import math 
 import matplotlib.pyplot as plt
-
+import mkl 
 
 def compute_loss(w,features,labels):
     w_loss  = np.zeros(60000, float)
@@ -72,8 +72,9 @@ def gradient_descent_runner(initial_w, features, labels, learning_rate, num_iter
     j = 0
     
     start = time.time()
+    global total_time 
     total_time = 0
-    
+
     for i in range(num_iterations):
         if (i % len(x_mini_batch) == 0):
             j = 0
@@ -129,13 +130,13 @@ def main():
     num_iterations = 1000
     learning_rate = 0.001
     decay = learning_rate/num_iterations
+    mkl.set_num_threads(4)
     
     print("Starting Gradient Descent at loss = {}".format(compute_loss(initial_w, features,labels)))
     print("Running...")
  
     w = gradient_descent_runner(initial_w, features, labels, learning_rate, num_iterations, decay)
     
-    print("After {0} iterations, loss = {1}".format(num_iterations, compute_loss(w, features, labels)))
-
+    print("After {0} iterations, loss = {1}, Elapsed Time = {2} ".format(num_iterations, compute_loss(w, features, labels), total_time))
     
 main()

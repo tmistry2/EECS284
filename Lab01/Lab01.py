@@ -2,7 +2,7 @@ import numpy as np
 import time
 import math 
 import matplotlib.pyplot as plt
-
+import mkl 
 
 #this is the logistic loss function which is defined in our labpdf
 #takes in our model, features and our labels
@@ -134,6 +134,7 @@ def gradient_descent_runner(initial_w, features, labels, learning_rate, num_iter
     
     #this is just to get the elapsed time 
     start = time.time()
+    global total_time 
     total_time = 0 
     
     #loop through all iterations
@@ -222,11 +223,11 @@ def main():
     initial_w = initial_w * (math.sqrt(1/150))
     
     #print(initial_w)
-    #initialize our number of iterations and learning_rate and decay
+    #initialize our number of iterations and learning_rate and decay and set num of threads to 2 
     num_iterations = 1000
     learning_rate = 0.001
     decay = learning_rate/num_iterations
-    
+    mkl.set_num_threads(2)
     #printing out initial loss 
     print("Starting Gradient Descent at loss = {}".format(compute_loss(initial_w, features,labels)))
     print("Running...")
@@ -236,8 +237,8 @@ def main():
     w = gradient_descent_runner(initial_w, features, labels, learning_rate, num_iterations, decay)
     
     #once the entire gradient descent runner is complete, just print out total iterations and loss after all iterations
-    #are complete
-    print("After {0} iterations, loss = {1}".format(num_iterations, compute_loss(w, features, labels)))
+    #are complete and final elapsed time after all iterations 
+    print("After {0} iterations, loss = {1}, Elapsed Time = {2}".format(num_iterations, compute_loss(w, features, labels), total_time))
 
     
 main()
